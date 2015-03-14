@@ -26,7 +26,7 @@ int paul;
 int a, ca;
 
 vector<Author*> author;
-queue<int> queue;
+queue<int> q;
 
 
 int main(){
@@ -53,16 +53,16 @@ int main(){
 		explored[i] = false; 
 
 	// set paul vertice as first in the queue
-	queue.push(paul-1);
+	q.push(paul-1);
 	explored[paul-1] = true;
 
 	// print notification
 	cout << "BFS starting in vertice " << paul << endl;
 
 	// Unless the queue is empty
-	while (!queue.empty()){
+	while (!q.empty()){
 		// Pop the vertex from the queue
-		int v = queue.pop();
+		int v = q.pop();
 
 		// display the explored vertices
 		cout << v << " ";
@@ -74,7 +74,7 @@ int main(){
 			// and and if it is unexplored
 			if (isConnected(v, w) && !explored[w]) {
 				// adds the vertex w to the queue
-				queue.push(w);
+				q.push(w);
 				explored[w] = true;
 			}
 		}
