@@ -62,7 +62,8 @@ int main(){
 	// Unless the queue is empty
 	while (!q.empty()){
 		// Pop the vertex from the queue
-		int v = q.pop();
+		int v = q.front();
+		q.pop();
 
 		// display the explored vertices
 		cout << v << " ";
@@ -72,7 +73,7 @@ int main(){
 		for (int w = 1; w < n; w++){
 			// Explores the vertex w if it is connected to v
 			// and and if it is unexplored
-			if (isConnected(v, w) && !explored[w]) {
+			if (is_connected(v, w) && !explored[w]) {
 				// adds the vertex w to the queue
 				q.push(w);
 				explored[w] = true;
