@@ -16,8 +16,17 @@ class Author{
 		void im_paul(){
 			is_paul = true;
 		}
+		int get_coauthors(int i){
+			return coauthors[i];
+		}
 		void add_coauthor(int i){
 			coauthors.push_back(i);
+		}
+		bool has_coauthor(int i){
+			return (find(coauthors.begin(), coauthors.end(), i) != coauthors.end());
+		}
+		int total_coauthors(){
+			return coauthors.size();
 		}
 };
 
@@ -27,6 +36,11 @@ int a, ca;
 
 vector<Author*> author;
 queue<int> q;
+vector<int> dist;
+
+bool is_connected(int x, int y){
+	return author[x]->has_coauthor(y);
+}
 
 
 int main(){
@@ -47,6 +61,17 @@ int main(){
 		author[a-1]->add_coauthor(ca-1);
 	}
 
+
+
+	for(int i = 0; i < n; i++){
+		cout << "coauthors of " << i+1 << ":\n\t";
+		for(int j = 0; j < author[i]->total_coauthors(); j++){
+			cout << author[i]->get_coauthors(j) << " ";
+		} 
+		cout << endl;
+	}
+
+
 	// keeps track os explored vertices
 	bool *explored = new bool[n];
 	for(int i = 0; i < n; i++)
@@ -66,14 +91,16 @@ int main(){
 		q.pop();
 
 		// display the explored vertices
-		cout << v << " ";
+		cout << v << endl;
 
 		// From the explored vertex v try to explore all the
 		// connected vertice s
-		for (int w = 1; w < n; w++){
+		for (int w = 0; w < n; w++){
+			if(w == v) continue;	
 			// Explores the vertex w if it is connected to v
 			// and and if it is unexplored
 			if (is_connected(v, w) && !explored[w]) {
+				cout << "adding w" << endl;
 				// adds the vertex w to the queue
 				q.push(w);
 				explored[w] = true;
