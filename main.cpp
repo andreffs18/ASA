@@ -42,7 +42,6 @@ bool is_connected(int x, int y){
 	return author[x]->has_coauthor(y);
 }
 
-
 int main(){
 	// scans first two integers (number of people and number of relations)
 	scanf("%u %u", &n, &r);
