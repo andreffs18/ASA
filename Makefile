@@ -1,7 +1,7 @@
 OBJS = main.o
 CC = g++
-CFLAGS = -Wall -c
-LFLAGS = -Wall
+CFLAGS = -O3 -Wall -c
+LFLAGS = -lm
 
 main: $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o main
