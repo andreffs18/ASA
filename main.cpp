@@ -40,6 +40,7 @@ int n, r;	// n - number of nodes, r - number of vertices (relations)
 int paul;	// number corresponding to the origin of the graph (Paul erdos)
 // global control variable to check if index node was already checked
 bool *visited;
+// global control distance variable for each node
 int *dist;
 // global array of objects "authors"
 vector<Author*> author;
@@ -48,7 +49,7 @@ queue<int> q;
 
 /********************************************************************
 	vector Author handling
-	Wrappers around the vector Author 
+	Wrappers around the vector Author
 *********************************************************************/
 // creates new instance of an author in authors vector
 void add_node(){
@@ -61,7 +62,7 @@ void add_vertice(int x, int y){
 }
 // check is author "x" has coauthor "y"
 bool is_connected(int x, int y){
-	return author[x]->has_coauthor(y);
+	return author[x]->has_coauthor(y) || author[y]->has_coauthor(x);
 }
 // set some dependencies
 // -> visited, populated array with all entries = False (control)
@@ -78,13 +79,13 @@ void set_dependencies(){
 
 /********************************************************************
 	Queue handling
-	Wrappers around queue "q" 
+	Wrappers around queue "q"
 *********************************************************************/
 // returns true is queue is empty
 bool queue_is_empty(){
 	return q.empty();
 }
-// add int to the queue array 
+// add int to the queue array
 void queue_push(int x){
 	q.push(x);
 	visited[x] = true;
@@ -103,7 +104,7 @@ int main(){
 	// creates amount of authors
 	scanf("%u %u", &n, &r);
 	for(int i = 0; i < n; i++) add_node();
-	
+
 	// scans paul erdos number
 	scanf("%u", &paul); paul -= 1;
 
@@ -150,5 +151,5 @@ int main(){
 			printf("%d\n", c);
 			c = 0;
 		}
-	}	
+	}
 }
