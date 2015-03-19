@@ -13,8 +13,10 @@ Andre Silva, Nº 75455
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <limits.h>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -37,7 +39,8 @@ public:
 int n, r;	// n - number of nodes, r - number of vertices (relations)
 int paul;	// number corresponding to the origin of the graph (Paul erdos)
 // global control variable to check if index node was already checked
-bool *visited = new bool[n]; 
+bool *visited;
+int *dist;
 // global array of objects "authors"
 vector<Author*> author;
 // global queue "q"
@@ -47,16 +50,6 @@ queue<int> q;
 	vector Author handling
 	Wrappers around the vector Author 
 *********************************************************************/
-// prints graph state
-void print_graph(){
-	for(int i = 0; i < n; i++){
-		cout << i << ": ";
-		for(int j = 0; j < author[i]->total_coauthors(); j++){
-			cout << author[i]->get_coauthor(j) << " ";
-		} 
-		cout << endl;
-	}
-}
 // creates new instance of an author in authors vector
 void add_node(){
 	author.push_back(new Author);
@@ -64,6 +57,7 @@ void add_node(){
 // adds coathor to authors "x" list
 void add_vertice(int x, int y){
 	author[x]->add_coauthor(y);
+	author[y]->add_coauthor(x);
 }
 // check is author "x" has coauthor "y"
 bool is_connected(int x, int y){
@@ -73,9 +67,12 @@ bool is_connected(int x, int y){
 // -> visited, populated array with all entries = False (control)
 // -> dist, populates array with all entries = 0 (control)
 void set_dependencies(){
+	visited = new bool[n]; 
+	dist = new int[n];
+
 	for(int i = 0; i < n; i++){
 		visited[i] = false; 
-		//dist[i] = 0;
+		dist[i] = INT_MAX;
 	}
 }
 
@@ -117,38 +114,41 @@ int main(){
 		add_vertice(a-1, ca-1);
 	}
 
-	// sets control variables to false, 0, what not
+	// sets control variables to false, infinity, what not
 	set_dependencies();
-	
-	// print_graph();
+
 	// set paul vertice as first in the queue
 	queue_push(paul);
-
-	// print notification
-	//cout << "BFS starting in vertice " << paul << endl;
+	dist[paul] = 0;
 
 	// Unless the queue is empty
 	while (!queue_is_empty()){
 		// Mark and pop the vertex from the queue
-		int v = queue_pop();
-		// display the visited vertices
-		//cout << "Pop from queue " << v << endl;
+		int u = queue_pop();
 
 		// From the visited vertex v try to explore all the connected vertice s
-		for(int w = 0; w < n; w++){
-			// if the current v is the same as the one we are searching
-			// or if both are not connected, just skip
-			if(w == v or !is_connected(v, w)) continue;
-			// if still not visited, go ahead and add it to the queue
-			if(!visited[w]){
-				cout << "adding " << w << " to queue" << endl;
-				queue_push(w);
-				// dict[w] = 1;
+		for(int v = 0; v < author[u]->total_coauthors(); v++){
+			// get adj coauthor
+			int c = author[u]->get_coauthor(v);
+			if(!visited[c]){
+				queue_push(c);
+				dist[c] = dist[u] + 1;
 			}
 		}
 	}
 
+	// sort array ascending
+	sort(dist, dist + n);
+
+	// get biggest distance between paul's and nodes
+	int c = dist[n-1];
+	printf("%d\n", c);
+
 	// print qtd of nodes p/distance
-	for(int i = 0; i < n; i++)
-		cout << "TODO" << endl;
+	for(int i = 1, c = 1; i < n; i++, c++){
+		if(i+1 > n || dist[i] != dist[i+1]){
+			printf("%d\n", c);
+			c = 0;
+		}
+	}	
 }
