@@ -53,6 +53,9 @@ queue<int> q;
 *********************************************************************/
 // creates new instance of an author in authors vector
 void add_node(){
+	int size = author.size();
+	visited[size] = false; 
+	dist[size] = INT_MAX;
 	author.push_back(new Author);
 }
 // adds coathor to authors "x" list
@@ -63,18 +66,6 @@ void add_vertice(int x, int y){
 // check is author "x" has coauthor "y"
 bool is_connected(int x, int y){
 	return author[x]->has_coauthor(y) || author[y]->has_coauthor(x);
-}
-// set some dependencies
-// -> visited, populated array with all entries = False (control)
-// -> dist, populates array with all entries = 0 (control)
-void set_dependencies(){
-	visited = new bool[n]; 
-	dist = new int[n];
-
-	for(int i = 0; i < n; i++){
-		visited[i] = false; 
-		dist[i] = INT_MAX;
-	}
 }
 
 /********************************************************************
@@ -103,6 +94,8 @@ int main(){
 	// scans first two integers (number of people and number of relations)
 	// creates amount of authors
 	scanf("%u %u", &n, &r);
+	visited = new bool[n]; 
+	dist = new int[n];
 	for(int i = 0; i < n; i++) add_node();
 
 	// scans paul erdos number
@@ -114,9 +107,6 @@ int main(){
 		scanf("%u %u", &a, &ca);
 		add_vertice(a-1, ca-1);
 	}
-
-	// sets control variables to false, infinity, what not
-	set_dependencies();
 
 	// set paul vertice as first in the queue
 	queue_push(paul);
