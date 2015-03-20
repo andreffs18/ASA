@@ -3,8 +3,8 @@ Project assignments for the Analysis and Synthesis of Algorithms course for #2 S
 
 Grupo 162 | Francisco Baio (ist17****) e André Silva (ist175455)
 
-Introdução
-----------
+##Introdução
+
 Hey! I'm your first Markdown document in **StackEdit**[^stackedit]. Don't delete me, I'm very helpful! I can be recovered anyway in the **Utils** tab of the <i class="icon-cog"></i> **Settings** dialog.
 
 ```
@@ -13,18 +13,12 @@ var bar = 0;
 ```
 
 
-----------
 
+##Solução
 
-Solução
-----------
 > **Tip:** Check out the [<i class="icon-upload"></i> Publish a document](#publish-a-document) section for a description of the different output formats.
 
-----------
-
-Análise Teorica
-----------
-
+##Análise Teorica
 
 **Markdown Extra** has a special syntax for tables:
 
@@ -43,10 +37,8 @@ You can specify column alignment with one or two colons:
 | Pipe     | $1    |  234  |
 
 
-----------
+##Avaliação Experimental
 
-Avaliação Experimental
-----------
 
 You can render *LaTeX* mathematical expressions using **MathJax**, as on [math.stackexchange.com][1]:
 
@@ -64,18 +56,14 @@ $$
 
 > **Note:** You can find more information about **LaTeX** mathematical expressions [here][4].
 
-----------
 
-Table of contents
-----------
+##Table of contents
+
 You can insert a table of contents using the marker `[TOC]`:
 
 [TOC]
 
-----------
-
-Function to run tests. by [@nuno-silva]
------------
+##Function to run tests. by [@nuno-silva]
 ```sh
 $ function test { ./main < tests/$1.in > tests/$1.myout; diff tests/$1.myout tests/$1.out; }
 $ function run_tests { for f in {01..05}; do test 0$f; done }
