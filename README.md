@@ -1,5 +1,6 @@
 #Análise e Síntese de Algoritmos | 1º Relatório
 Project assignments for the Analysis and Synthesis of Algorithms course for #2 Semester of LEIC, IST@Alameda
+
 Grupo 162 | Francisco Baio (ist17****) e André Silva (ist175455)
 
 Introdução
