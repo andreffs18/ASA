@@ -10,13 +10,14 @@ Andre Silva, Nº 75455
 /********************************************************************
 	includes & defines
 *********************************************************************/
-#include <iostream>
-#include <stdio.h>
+/*#include <iostream>
+
 #include <string>
 #include <limits.h>
 #include <vector>
 #include <queue>
-#include <algorithm>
+#include <algorithm>*/
+#include <stdio.h>
 
 using namespace std;
 
