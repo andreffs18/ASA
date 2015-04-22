@@ -10,137 +10,147 @@ Andre Silva, Nº 75455
 /********************************************************************
 	includes & defines
 *********************************************************************/
-/*#include <iostream>
-
-#include <string>
-#include <limits.h>
-#include <vector>
-#include <queue>
-#include <algorithm>*/
-#include <stdio.h>
+#include <iostream>		// for std::cout and endl,
+#include <vector>		// for list declaration
+#include <limits.h>  	// for INT_MAX
+#include <stdio.h>		// standard library
 
 using namespace std;
 
 /********************************************************************
 	Class and global variables
 *********************************************************************/
-class Author{
+
+int n, e;	// n - number of locals, e - number of costs (edges)
+int source;	// int number corresponding to the source of the graph
+
+// Edge Class
+// 
+class Edge{
 private:
-	vector<int> coauthors;
+	int u;  // source node
+	int v;	// dest node
+	int weight;	// cost between nodes
 public:
-	Author(){}
-	int get_coauthor(int i){ return coauthors[i]; }
-	void add_coauthor(int i){ coauthors.push_back(i); }
-	bool has_coauthor(int i){
-		return (find(coauthors.begin(), coauthors.end(), i) != coauthors.end());
+	Edge(int _u, int _v, int _w){
+		u = _u;
+		v = _v;
+		weight = _w;	
 	}
-	int total_coauthors(){ return coauthors.size(); }
+
+	int get_u(){ return u; }
+	int get_v(){ return v; }
+	int get_weight(){ return weight; }
+	void set_weight(int _w){ weight = _w; }
+
+	void print(){ cout << u << " -- " << weight << " --> " << v << endl; }	
 };
 
-int n, r;	// n - number of nodes, r - number of vertices (relations)
-int paul;	// number corresponding to the origin of the graph (Paul erdos)
-// global control variable to check if index node was already checked
-bool *visited;
-// global control distance variable for each node
-int *dist;
-// global array of objects "authors"
-vector<Author*> author;
-// global queue "q"
-queue<int> q;
 
-/********************************************************************
-	vector Author handling
-	Wrappers around the vector Author
-*********************************************************************/
-// creates new instance of an author in authors vector
-void add_node(){
-	int size = author.size();
-	visited[size] = false; 
-	dist[size] = INT_MAX;
-	author.push_back(new Author);
-}
-// adds coathor to authors "x" list
-void add_vertice(int x, int y){
-	author[x]->add_coauthor(y);
-	author[y]->add_coauthor(x);
-}
-// check is author "x" has coauthor "y"
-bool is_connected(int x, int y){
-	return author[x]->has_coauthor(y) || author[y]->has_coauthor(x);
+// Graph Class
+//
+class Graph{
+private:
+	int V;  // no. of vertices
+	int E; 	// no. of edges 
+	vector<Edge> edges;  // vector of adjacent edges
+public:
+	Graph(int _V, int _E){
+		V = _V;
+		E = _E;
+	}
+	int get_v(){ return V; };
+	int get_e(){ return E; };
+	vector<Edge> get_edges(){ return edges; }
+
+	void add_edge(int _u, int _v, int _w){
+		Edge edge(_u, _v, _w);
+		edges.push_back(edge);		
+	}
+
+	void print(){
+		for (int i=0; i<edges.size(); i++)
+			edges[i].print();
+	}
+	
+};
+void printArr(int dist[], int n)
+{
+    printf("Vertex   Distance from Source\n");
+    for (int i = 0; i < n; ++i)
+    	if(dist[i] < 0)
+    		cout << "I" << endl;
+    	else
+    		cout << dist[i] << endl;
+    cout << "U" << endl;
 }
 
-/********************************************************************
-	Queue handling
-	Wrappers around queue "q"
-*********************************************************************/
-// returns true is queue is empty
-bool queue_is_empty(){
-	return q.empty();
-}
-// add int to the queue array
-void queue_push(int x){
-	q.push(x);
-	visited[x] = true;
-}
-// pop top value from queue
-int queue_pop(){
-	int v = q.front(); q.pop();
-	return v;
+bool BellmanFord(Graph g, int source){
+	int V = g.get_v();
+	int E = g.get_e();
+	int dist[V];
+
+	// initialize all values in graph to 0 and INF,
+	for (int i = 0; i < V; i++)
+		dist[i] = INT_MAX;
+	dist[source] = 0;
+
+	// go V-1 times and relax vertices
+	for (int i = 0; i < V-1; i++){
+		for (int j = 0; j < E; j++){
+			int u = g.get_edges()[j].get_u();
+			int v = g.get_edges()[j].get_v();
+			int weight = g.get_edges()[j].get_weight();
+
+			//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
+			if (dist[v] > dist[u] + weight && dist[u] != INT_MAX) 
+				dist[v] = dist[u] + weight;
+		}
+	}
+
+	printArr(dist, V);
+ 
+	for (int i = 0; i < E; i++){
+		int u = g.get_edges()[i].get_u();
+		int v = g.get_edges()[i].get_v();
+		int weight = g.get_edges()[i].get_weight();
+
+		if (dist[v] > dist[u] + weight && dist[u] != INT_MAX)
+		// if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
+			return false;
+	}
+	return true;
 }
 
 /********************************************************************
 	Main program
 *********************************************************************/
 int main(){
-	// scans first two integers (number of people and number of relations)
-	// creates amount of authors
-	scanf("%u %u", &n, &r);
-	visited = new bool[n]; 
-	dist = new int[n];
-	for(int i = 0; i < n; i++) add_node();
+	// scans first two integers (total of localities and total of costs)
+	scanf("%u %u", &n, &e);
+	// scans company's place? (source)
+	scanf("%u", &source);
+	// creates graph
+	Graph g(e, n);
+	// scans all costs per location and populates graph
+	for (int i = 0; i < e; i++){
+		int u, v, w;  // u & v are elements in the graph (the previews "node") w is the cost
+		scanf("%u %u %u", &u, &v, &w);
+		g.add_edge(u, v, w);
+	}
 
-	// scans paul erdos number
-	scanf("%u", &paul); paul -= 1;
+	bool result = BellmanFord(g, source);
 
+	cout << result;
 	// scans #r relations of coauthors
-	for(int i = 0; i < r; i++){
-		int a, ca;
-		scanf("%u %u", &a, &ca);
-		add_vertice(a-1, ca-1);
-	}
-
-	// set paul vertice as first in the queue
-	queue_push(paul);
-	dist[paul] = 0;
-
-	// Unless the queue is empty
-	while (!queue_is_empty()){
-		// Mark and pop the vertex from the queue
-		int u = queue_pop();
-
-		// From the visited vertex v try to explore all the connected vertice s
-		for(int v = 0; v < author[u]->total_coauthors(); v++){
-			// get adj coauthor
-			int c = author[u]->get_coauthor(v);
-			if(!visited[c]){
-				queue_push(c);
-				dist[c] = dist[u] + 1;
-			}
-		}
-	}
-
-	// sort array ascending
-	sort(dist, dist + n);
-
-	// get biggest distance between paul's and nodes
-	int c = dist[n-1];
-	printf("%d\n", c);
+	//InitializeSingleSource(graph, source);
+	//BellmanFord(graph, wheight, source);
 
 	// print qtd of nodes p/distance
-	for(int i = 1, c = 1; i < n; i++, c++){
-		if(i+1 > n || dist[i] != dist[i+1]){
-			printf("%d\n", c);
-			c = 0;
-		}
-	}
+	// for(int i = 1, c = 1; i < n; i++, c++){
+	// 	if(i+1 > n || dist[i] != dist[i+1]){
+	// 		printf("%d\n", c);
+	// 		c = 0;
+	// 	}
+	// }
 }
