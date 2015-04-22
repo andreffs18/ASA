@@ -21,7 +21,7 @@ using namespace std;
 	Class and global variables
 *********************************************************************/
 
-int n, e;	// n - number of locals, e - number of costs (edges)
+int v, e;	// v - number of locals, e - number of costs (edges)
 int source;	// int number corresponding to the source of the graph
 
 // Edge Class
@@ -43,7 +43,7 @@ public:
 	int get_weight(){ return weight; }
 	void set_weight(int _w){ weight = _w; }
 
-	void print(){ cout << u << " -- " << weight << " --> " << v << endl; }
+	void print(){ cout << u+1 << " -- " << weight << " --> " << v+1 << endl; }
 };
 
 
@@ -74,15 +74,20 @@ public:
 	}
 
 };
-void printArr(int dist[], int n)
-{
-    // printf("Vertex Distance from Source\n");
-    for (int i = 0; i < n; ++i)
-    	if(dist[i] < 0)
-    		cout << "I" << endl;
-    	else
-    		cout << dist[i] << endl;
-    cout << "U" << endl;
+
+void printArr(int dist[], int v) {
+  // printf("Vertex Distance from Source\n");
+  for (int i = 0; i < v; ++i) {
+  	if(dist[i] < 0) {
+  		cout << "I" << endl;
+  	}
+  	else if(dist[i] == INT_MAX) {
+	    cout << "U" << endl;
+  	}
+  	else {
+  		cout << dist[i] << endl;
+  	}
+  }
 }
 
 bool BellmanFord(Graph g, int source){
@@ -91,12 +96,13 @@ bool BellmanFord(Graph g, int source){
 	int dist[V];
 
 	// initialize all values in graph to 0 and INF,
-	for (int i = 0; i < V-1; i++)
+	for (int i = 0; i < V; i++)
 		dist[i] = INT_MAX;
-	dist[source-1] = 0;
+
+	dist[source] = 0;
 
 	// go V-1 times and relax vertices
-	for (int i = 0; i < V-1; i++){
+	for (int i = 1; i < V-1; i++){
 		for (int j = 0; j < E; j++){
 			int u = g.get_edges()[j].get_u();
 			int v = g.get_edges()[j].get_v();
@@ -127,16 +133,17 @@ bool BellmanFord(Graph g, int source){
 *********************************************************************/
 int main(){
 	// scans first two integers (total of localities and total of costs)
-	scanf("%u %u", &n, &e);
+	scanf("%u %u", &v, &e);
 	// scans company's place? (source)
 	scanf("%u", &source);
+	source = source-1;
 	// creates graph
-	Graph g(e, n);
+	Graph g(v, e);
 	// scans all costs per location and populates graph
 	for (int i = 0; i < e; i++){
-		int u, v, w;  // u & v are elements in the graph (the previews "node") w is the cost
-		scanf("%u %u %u", &u, &v, &w);
-		g.add_edge(u-1, v-1, w);
+		int a, b, w;  // a & b are elements in the graph (the previews "node") w is the cost
+		scanf("%u %u %u", &a, &b, &w);
+		g.add_edge(a-1, b-1, w);
 	}
 
 	// g.print();
