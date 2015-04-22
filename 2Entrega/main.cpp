@@ -25,7 +25,7 @@ int n, e;	// n - number of locals, e - number of costs (edges)
 int source;	// int number corresponding to the source of the graph
 
 // Edge Class
-// 
+//
 class Edge{
 private:
 	int u;  // source node
@@ -35,7 +35,7 @@ public:
 	Edge(int _u, int _v, int _w){
 		u = _u;
 		v = _v;
-		weight = _w;	
+		weight = _w;
 	}
 
 	int get_u(){ return u; }
@@ -43,7 +43,7 @@ public:
 	int get_weight(){ return weight; }
 	void set_weight(int _w){ weight = _w; }
 
-	void print(){ cout << u << " -- " << weight << " --> " << v << endl; }	
+	void print(){ cout << u << " -- " << weight << " --> " << v << endl; }
 };
 
 
@@ -52,7 +52,7 @@ public:
 class Graph{
 private:
 	int V;  // no. of vertices
-	int E; 	// no. of edges 
+	int E; 	// no. of edges
 	vector<Edge> edges;  // vector of adjacent edges
 public:
 	Graph(int _V, int _E){
@@ -65,18 +65,18 @@ public:
 
 	void add_edge(int _u, int _v, int _w){
 		Edge edge(_u, _v, _w);
-		edges.push_back(edge);		
+		edges.push_back(edge);
 	}
 
 	void print(){
 		for (int i=0; i<edges.size(); i++)
 			edges[i].print();
 	}
-	
+
 };
 void printArr(int dist[], int n)
 {
-    printf("Vertex   Distance from Source\n");
+    printf("Vertex Distance from Source\n");
     for (int i = 0; i < n; ++i)
     	if(dist[i] < 0)
     		cout << "I" << endl;
@@ -103,13 +103,13 @@ bool BellmanFord(Graph g, int source){
 			int weight = g.get_edges()[j].get_weight();
 
 			//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
-			if (dist[v] > dist[u] + weight && dist[u] != INT_MAX) 
+			if (dist[v] > dist[u] + weight && dist[u] != INT_MAX)
 				dist[v] = dist[u] + weight;
 		}
 	}
 
 	printArr(dist, V);
- 
+
 	for (int i = 0; i < E; i++){
 		int u = g.get_edges()[i].get_u();
 		int v = g.get_edges()[i].get_v();
