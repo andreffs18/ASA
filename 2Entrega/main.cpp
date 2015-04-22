@@ -76,7 +76,7 @@ public:
 };
 void printArr(int dist[], int n)
 {
-    printf("Vertex Distance from Source\n");
+    // printf("Vertex Distance from Source\n");
     for (int i = 0; i < n; ++i)
     	if(dist[i] < 0)
     		cout << "I" << endl;
@@ -91,9 +91,9 @@ bool BellmanFord(Graph g, int source){
 	int dist[V];
 
 	// initialize all values in graph to 0 and INF,
-	for (int i = 0; i < V; i++)
+	for (int i = 0; i < V-1; i++)
 		dist[i] = INT_MAX;
-	dist[source] = 0;
+	dist[source-1] = 0;
 
 	// go V-1 times and relax vertices
 	for (int i = 0; i < V-1; i++){
@@ -136,12 +136,14 @@ int main(){
 	for (int i = 0; i < e; i++){
 		int u, v, w;  // u & v are elements in the graph (the previews "node") w is the cost
 		scanf("%u %u %u", &u, &v, &w);
-		g.add_edge(u, v, w);
+		g.add_edge(u-1, v-1, w);
 	}
 
-	bool result = BellmanFord(g, source);
+	// g.print();
 
-	cout << result;
+	BellmanFord(g, source);
+
+	// cout << result;
 	// scans #r relations of coauthors
 	//InitializeSingleSource(graph, source);
 	//BellmanFord(graph, wheight, source);
