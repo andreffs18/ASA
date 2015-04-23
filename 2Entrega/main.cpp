@@ -77,10 +77,10 @@ public:
 
 };
 
-void printArr(int dist[], int imp[], int v) {
+void printArr(int dist[], int distDup[], int imp[], int v) {
   // printf("Vertex Distance from Source\n");
   for (int i = 0; i < v; ++i) {
-  	if(imp[i] == IMPOSSIBLE) {
+  	if(imp[i] == IMPOSSIBLE || dist[i] != distDup[i]) {
   		cout << "I" << endl;
   	}
   	else if(dist[i] == INT_MAX) {
@@ -96,15 +96,18 @@ void BellmanFord(Graph g, int source){
 	int V = g.get_v();
 	int E = g.get_e();
 	int dist[V];
+	int distDup[V];
 	int imp[V];
 
 	// initialize all values in graph to 0 and INF,
 	for (int i = 0; i < V; i++) {
 		dist[i] = INT_MAX;
+		distDup[i] = INT_MAX;
 		imp[i] = 0;
 	}
 
 	dist[source] = 0;
+	distDup[source] = 0;
 
 	// go V-1 times and relax vertices
 	for (int i = 1; i < V-1; i++){
@@ -114,8 +117,10 @@ void BellmanFord(Graph g, int source){
 			int weight = g.get_edges()[j].get_weight();
 
 			//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
-			if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
+			if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
 				dist[v] = dist[u] + weight;
+				distDup[v] = dist[u] + weight;
+			}
 		}
 	}
 
@@ -130,7 +135,23 @@ void BellmanFord(Graph g, int source){
 
 			// FIND OTHER IMPOSSIBLE STUFF
 
-			printArr(dist, imp, V);
+			// printArr(dist, distDup, imp, V);
+
+			// cout << "\n\n\n" << endl;
+
+
+			for (int j = 0; j < E; j++){
+				int u = g.get_edges()[j].get_u();
+				int v = g.get_edges()[j].get_v();
+				int weight = g.get_edges()[j].get_weight();
+
+				//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
+				if (distDup[u] != INT_MAX && distDup[u] + weight < distDup[v])
+					distDup[v] = distDup[u] + weight;
+			}
+
+			printArr(dist, distDup, imp, V);
+
 		}
 	}
 }
