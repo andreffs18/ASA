@@ -77,10 +77,13 @@ public:
 
 };
 
-void printArr(int dist[], int distDup[], int imp[], int v) {
+void printArr(int source, int dist[], int distDup[], int imp[], int v) {
   // printf("Vertex Distance from Source\n");
   for (int i = 0; i < v; ++i) {
-  	if(imp[i] == IMPOSSIBLE || dist[i] != distDup[i]) {
+  	if(i == source) {
+  		cout << "0" << endl;
+  	}
+  	else if(imp[i] == IMPOSSIBLE || dist[i] != distDup[i]) {
   		cout << "I" << endl;
   	}
   	else if(dist[i] == INT_MAX) {
@@ -124,36 +127,33 @@ void BellmanFord(Graph g, int source){
 		}
 	}
 
-	for (int i = 0; i < E; i++){
-		int u = g.get_edges()[i].get_u();
-		int v = g.get_edges()[i].get_v();
-		int weight = g.get_edges()[i].get_weight();
+	// for (int i = 0; i < E; i++){
+	// 	int u = g.get_edges()[i].get_u();
+	// 	int v = g.get_edges()[i].get_v();
+	// 	int weight = g.get_edges()[i].get_weight();
 
-		if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
-			imp[u] = IMPOSSIBLE;
-			imp[v] = IMPOSSIBLE;
-
-			// FIND OTHER IMPOSSIBLE STUFF
-
-			// printArr(dist, distDup, imp, V);
-
-			// cout << "\n\n\n" << endl;
+	// 	if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
+	// 		imp[u] = IMPOSSIBLE;
+	// 		imp[v] = IMPOSSIBLE;
+	// 	}
+	// }
 
 
-			for (int j = 0; j < E; j++){
-				int u = g.get_edges()[j].get_u();
-				int v = g.get_edges()[j].get_v();
-				int weight = g.get_edges()[j].get_weight();
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < E; j++){
+			int u = g.get_edges()[j].get_u();
+			int v = g.get_edges()[j].get_v();
+			int weight = g.get_edges()[j].get_weight();
 
-				//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
-				if (distDup[u] != INT_MAX && distDup[u] + weight < distDup[v])
-					distDup[v] = distDup[u] + weight;
+			//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
+			if (distDup[u] != INT_MAX && distDup[u] + weight < distDup[v]) {
+				distDup[v] = distDup[u] + weight;
 			}
-
-			printArr(dist, distDup, imp, V);
-
 		}
 	}
+
+	printArr(source, dist, distDup, imp, V);
+
 }
 
 /********************************************************************
