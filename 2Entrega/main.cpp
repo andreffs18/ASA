@@ -17,6 +17,8 @@ Andre Silva, Nº 75455
 
 using namespace std;
 
+#define IMPOSSIBLE 80
+
 /********************************************************************
 	Class and global variables
 *********************************************************************/
@@ -75,10 +77,10 @@ public:
 
 };
 
-void printArr(int dist[], int v) {
+void printArr(int dist[], int imp[], int v) {
   // printf("Vertex Distance from Source\n");
   for (int i = 0; i < v; ++i) {
-  	if(dist[i] < 0) {
+  	if(imp[i] == IMPOSSIBLE) {
   		cout << "I" << endl;
   	}
   	else if(dist[i] == INT_MAX) {
@@ -90,14 +92,17 @@ void printArr(int dist[], int v) {
   }
 }
 
-bool BellmanFord(Graph g, int source){
+void BellmanFord(Graph g, int source){
 	int V = g.get_v();
 	int E = g.get_e();
 	int dist[V];
+	int imp[V];
 
 	// initialize all values in graph to 0 and INF,
-	for (int i = 0; i < V; i++)
+	for (int i = 0; i < V; i++) {
 		dist[i] = INT_MAX;
+		imp[i] = 0;
+	}
 
 	dist[source] = 0;
 
@@ -109,23 +114,25 @@ bool BellmanFord(Graph g, int source){
 			int weight = g.get_edges()[j].get_weight();
 
 			//if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
-			if (dist[v] > dist[u] + weight && dist[u] != INT_MAX)
+			if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
 				dist[v] = dist[u] + weight;
 		}
 	}
-
-	printArr(dist, V);
 
 	for (int i = 0; i < E; i++){
 		int u = g.get_edges()[i].get_u();
 		int v = g.get_edges()[i].get_v();
 		int weight = g.get_edges()[i].get_weight();
 
-		if (dist[v] > dist[u] + weight && dist[u] != INT_MAX)
-		// if (dist[u] != INT_MAX && dist[u] + weight < dist[v])
-			return false;
+		if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
+			imp[u] = IMPOSSIBLE;
+			imp[v] = IMPOSSIBLE;
+
+			// FIND OTHER IMPOSSIBLE STUFF
+
+			printArr(dist, imp, V);
+		}
 	}
-	return true;
 }
 
 /********************************************************************
