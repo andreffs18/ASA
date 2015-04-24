@@ -1,6 +1,6 @@
 OBJS = main.o
 CC = g++
-CFLAGS = -O3 -Wall -c
+CFLAGS = -O3 -ansi -Wall -c
 LFLAGS = -lm
 
 main: $(OBJS)
@@ -11,4 +11,4 @@ main.o: main.cpp
 
 clean:
 	rm -f *.o *~ main
-	
+
